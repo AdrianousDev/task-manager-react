@@ -7,7 +7,21 @@ export const TasksProvider = ({ children }: ITasksProviderProps) => {
     const [tasks, setTasks] = useState<Task[]>(() => {
         const storedTasks = localStorage.getItem("tasks");
 
-        if (!storedTasks) return [];
+        if (!storedTasks)
+            return [
+                {
+                    id: 1,
+                    title: "Título teste.",
+                    description: "Descrição teste.",
+                    completed: false,
+                },
+                {
+                    id: 2,
+                    title: "Título teste 2.",
+                    description: "Descrição teste 2.",
+                    completed: false,
+                },
+            ];
 
         try {
             return JSON.parse(storedTasks) as Task[];
@@ -16,12 +30,24 @@ export const TasksProvider = ({ children }: ITasksProviderProps) => {
         }
     });
 
-    const addTask = (title: string, description: string) => {
+    const addTask = (title: string, description: string): void => {
         console.log(title, description);
     };
 
+    const handleCompletedClick = (id: number): void => {
+        setTasks((currentTasks) =>
+            currentTasks.map((task) => {
+                if (task.id === id) {
+                    return { ...task, completed: !task.completed };
+                }
+
+                return task;
+            }),
+        );
+    };
+
     return (
-        <TasksContext.Provider value={{ tasks, addTask }}>
+        <TasksContext.Provider value={{ tasks, addTask, handleCompletedClick }}>
             {children}
         </TasksContext.Provider>
     );
