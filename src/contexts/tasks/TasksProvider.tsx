@@ -31,7 +31,18 @@ export const TasksProvider = ({ children }: ITasksProviderProps) => {
     });
 
     const addTask = (title: string, description: string): void => {
-        console.log(title, description);
+        if (!title) throw new Error("Título inválido.");
+
+        if (!description) throw new Error("Descrição inválida.");
+
+        const newTask = {
+            id: tasks.length + 1,
+            title,
+            description,
+            completed: false,
+        };
+
+        setTasks((prevTasks) => [...prevTasks, newTask]);
     };
 
     const handleCompletedClick = (id: number): void => {
