@@ -1,1 +1,1 @@
-# React + TypeScript + Vite + TailwindCSS
+# Task Manager - Astro & React
