@@ -1,40 +1,27 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { TasksContext } from "./TasksContext";
 import type { ITasksProviderProps } from "../../interfaces/props/ITasksProviderProps";
 import type { Task } from "../../interfaces/tasks/ITask";
-
-const initialTasks: Task[] = [
-    {
-        id: 1,
-        title: "Título teste.",
-        description: "Descrição teste.",
-        completed: false,
-    },
-    {
-        id: 2,
-        title: "Título teste 2.",
-        description: "Descrição teste 2.",
-        completed: false,
-    },
-];
+import { isTaskArray } from "./taskGuards";
 
 export const TasksProvider = ({ children }: ITasksProviderProps) => {
     const [tasks, setTasks] = useState<Task[]>(() => {
         const storedTasks = localStorage.getItem("tasks");
 
-        if (!storedTasks) return initialTasks;
+        if (!storedTasks) return [];
 
         try {
             const parsedTasks: unknown = JSON.parse(storedTasks);
 
-            if (!Array.isArray(parsedTasks)) {
+            if (!isTaskArray(parsedTasks)) {
                 console.error(
-                    "Dados recuperados do LocalStorage não são um array.",
+                    "Os dados recuperados do localStorage possuem formato inválido.",
                 );
+
                 return [];
             }
 
-            return parsedTasks as Task[];
+            return parsedTasks;
         } catch (error) {
             console.error(
                 "Não foi possível interpretar os dados do localStorage.",
@@ -44,6 +31,10 @@ export const TasksProvider = ({ children }: ITasksProviderProps) => {
             return [];
         }
     });
+
+    useEffect(() => {
+        localStorage.setItem("tasks", JSON.stringify(tasks));
+    }, [tasks]);
 
     const addTask = (title: string, description: string): void => {
         if (!title) throw new Error("Título inválido.");
