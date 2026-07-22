@@ -1,14 +1,10 @@
 {
     "private": true,
-    "workspaces": [
-        "astro-app",
-        "react-app"
-    ],
     "scripts": {
-        "dev:astro": "npm run dev --workspace=astro-app",
-        "dev:react": "npm run dev --workspace=react-app",
-        "build:react": "npm run build --workspace=react-app",
-        "build:astro": "npm run build --workspace=astro-app",
+        "dev:astro": "npm --prefix astro-app run dev",
+        "dev:react": "npm --prefix react-app run dev",
+        "build:astro": "npm --prefix astro-app run build",
+        "build:react": "npm --prefix react-app run build",
         "build": "npm run build:react && npm run build:astro"
     }
 }
